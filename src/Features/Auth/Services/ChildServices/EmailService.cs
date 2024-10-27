@@ -61,7 +61,7 @@ namespace HUBT_Social_API.src.Features.Auth.Services.ChildServices
 
             string code = random.Next(100000, 999999).ToString();
             var expireTime = DateTime.UtcNow;
-            Postcode postcode = new() { Code = code, Email = reciver, ExpireTime = expireTime };
+            Postcode postcode = new() { Code = code, StudentCode = reciver, ExpireTime = expireTime };
 
             await _postcode.InsertOneAsync(postcode);
             return postcode;
@@ -74,7 +74,7 @@ namespace HUBT_Social_API.src.Features.Auth.Services.ChildServices
             {
                 return null;
             }
-            Postcode userPostcode = await _postcode.Find(ps => ps.Code == postcode.Postcode && ps.Email == postcode.UserName).FirstOrDefaultAsync();
+            Postcode userPostcode = await _postcode.Find(ps => ps.Code == postcode.Postcode && ps.StudentCode == postcode.UserName).FirstOrDefaultAsync();
             if (userPostcode == null)
             {
                 return null;

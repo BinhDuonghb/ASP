@@ -37,7 +37,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 400,
                         message: _localizer["InvalidInformation"]
@@ -49,7 +49,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             if (!result.Succeeded)
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 400,
                         message: _localizer["RegistrationFailed"],
@@ -59,7 +59,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             // Gửi mã OTP qua email để xác thực
             try
             {
-                Postcode code = await _emailService.CreatePostcode(request.Email);
+                Postcode code = await _emailService.CreatePostcode(request.StudentCode);
 
                 await _emailService.SendEmailAsync(new EmailRequest { Code = code.Code, Subject = "Validate Email Code", ToEmail = request.Email });
             }
@@ -67,7 +67,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             {
                 return StatusCode(
                     500,
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 500,
                         message: _localizer["UnableToSendOTP"]
@@ -75,7 +75,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
                 );
             }
             return Ok(
-                new AụthResponse(
+                new AuthResponse(
                     success: true,
                     statusCode: 200,
                     message: _localizer["RegistrationSuccess"]
@@ -87,7 +87,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
 
         // Đăng nhập và gửi mã OTP qua email
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync(ILoginRequest model)
+        public async Task<IActionResult> LoginAsync(LoginByStudentCodeRequest model)
         {
             var (result, user) = await _authService.LoginAsync(model);
             
@@ -95,7 +95,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             {
                 try
                 {
-                    Postcode code = await _emailService.CreatePostcode(user.Email);
+                    Postcode code = await _emailService.CreatePostcode(user.UserName);
 
                     await _emailService.SendEmailAsync(new EmailRequest { Code = code.Code, Subject = "Validate Email Code", ToEmail = user.Email });
                 }
@@ -103,7 +103,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
                 {
                     return StatusCode(
                         500,
-                        new AụthResponse(
+                        new AuthResponse(
                             success: false,
                             statusCode: 500,
                             message: _localizer["UnableToSendOTP"]
@@ -112,7 +112,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
                 }
 
                 return Ok(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: true,
                         statusCode: 200,
                         message: _localizer["StepOneVerificationSuccess"]
@@ -122,7 +122,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             else if (result.IsLockedOut)
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 403,
                         message: _localizer["AccountLocked"]
@@ -132,7 +132,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             else if (result.IsNotAllowed)
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 403,
                         message: _localizer["LoginNotAllowed"]
@@ -142,7 +142,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             else if (result.RequiresTwoFactor)
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 401,
                         message: _localizer["TwoFactorRequired"]
@@ -152,7 +152,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             else
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 400,
                         message: _localizer["InvalidCredentials"]
@@ -168,7 +168,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 400,
                         message: _localizer["InvalidInformation"]
@@ -182,7 +182,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
                 var token = await _tokenService.GenerateTokenAsync(user);
 
                 return Ok(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: true,
                         statusCode: 200,
                         message: _localizer["VerificationSuccess"],
@@ -192,7 +192,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             }
 
             return Unauthorized(
-                new AụthResponse(
+                new AuthResponse(
                     success: false,
                     statusCode: 401,
                     message: _localizer["OTPVerificationFailed"]
@@ -207,7 +207,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             if (request == null || string.IsNullOrEmpty(request.Language))
             {
                 return BadRequest(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: false,
                         statusCode: 400,
                         message: _localizer["InvalidLanguage"]
@@ -220,7 +220,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             if (result)
             {
                 return Ok(
-                    new AụthResponse(
+                    new AuthResponse(
                         success: true,
                         statusCode: 200,
                         message: _localizer["LanguageChanged"]
@@ -229,7 +229,7 @@ namespace HUBTSOCIAL.Src.Features.Auth.Controllers
             }
 
             return BadRequest(
-                new AụthResponse(
+                new AuthResponse(
                     success: false,
                     statusCode: 400,
                     message: _localizer["LanguageChangeFailed"]

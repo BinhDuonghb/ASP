@@ -7,8 +7,8 @@ namespace HUBT_Social_API.src.Features.Auth.Dtos.Collections
     public class Postcode
     {
         [BsonId]
-        [BsonElement("Email")]
-        public string Email { get; set; } = string.Empty;
+        [BsonElement("StudentCode")]
+        public string StudentCode { get; set; } = string.Empty;
 
         [BsonElement("Code")]
         public string Code { get; set; } = string.Empty;
