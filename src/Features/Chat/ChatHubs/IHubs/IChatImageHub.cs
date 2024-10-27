@@ -1,7 +1,6 @@
-namespace HUBTSOCIAL.Src.Features.Chat.ChatHubs.IHubs
+namespace HUBT_Social_API.Features.Chat.ChatHubs.IHubs;
+
+public interface IChatImageHub
 {
-    public interface IChatImageHub
-    {
-        Task SendImage(string chatRoomId, string userId, byte[] imageData);
-    }    
+    Task SendImage(string chatRoomId, string userId, byte[] imageData);
 }

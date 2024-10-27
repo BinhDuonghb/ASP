@@ -1,12 +1,10 @@
-
-using HUBT_Social_API.src.Features.Authentication.Models;
-using HUBT_Social_API.src.Features.Auth.Dtos.Request.LoginRequest;
+using HUBT_Social_API.Features.Auth.Dtos.Request.LoginRequest;
+using HUBT_Social_API.Features.Auth.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace HUBT_Social_API.src.Features.Auth.Services.IAuthServices
+namespace HUBT_Social_API.Features.Auth.Services.IAuthServices;
+
+public interface ILoginService
 {
-    public interface ILoginService
-    {
-        Task<(SignInResult,AUser?)> LoginAsync(ILoginRequest model);
-    }
+    Task<(SignInResult, AUser?)> LoginAsync(ILoginRequest model);
 }

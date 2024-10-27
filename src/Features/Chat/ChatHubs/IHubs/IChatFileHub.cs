@@ -1,7 +1,6 @@
-namespace HUBTSOCIAL.Src.Features.Chat.ChatHubs.IHubs
+namespace HUBT_Social_API.Features.Chat.ChatHubs.IHubs;
+
+public interface IChatFileHub
 {
-    public interface IChatFileHub
-    {
-        Task SendFile(string chatRoomId, string userId, byte[] fileData, string fileName);
-    }    
+    Task SendFile(string chatRoomId, string userId, byte[] fileData, string fileName);
 }

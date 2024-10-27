@@ -1,7 +1,6 @@
-﻿namespace HUBT_Social_API.src.Features.Auth.Dtos.Request
+﻿namespace HUBT_Social_API.Features.Auth.Dtos.Request;
+
+public class CreateRoleRequest
 {
-    public class CreateRoleRequest
-    {
-        public string RoleName { get; set; } = string.Empty;
-    }
+    public string RoleName { get; set; } = string.Empty;
 }

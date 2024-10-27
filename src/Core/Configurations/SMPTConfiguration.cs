@@ -1,15 +1,12 @@
-using HUBT_Social_API.src.Core.Settings;
-using Microsoft.Extensions.DependencyInjection;
+using HUBT_Social_API.Core.Settings;
 
+namespace HUBT_Social_API.Core.Configurations;
 
-namespace HUBT_Social_API.src.Core.Configurations
+public static class SMPTConfiguration
 {
-    public static class SMPTConfiguration
+    public static IServiceCollection ConfigureSMPT(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection ConfigureSMPT(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<SMPTSetting>(configuration.GetSection("SMPTSetting"));
-            return services;
-        }
+        services.Configure<SMPTSetting>(configuration.GetSection("SMPTSetting"));
+        return services;
     }
 }

@@ -1,38 +1,12 @@
+using HUBT_Social_API.Core.Configurations;
+using HUBT_Social_API.Features.Chat.ChatHubs;
 using HUBT_Social_API.src.Core.Configurations;
-using HUBTSOCIAL.Src.Features.Chat.ChatHubs;
 
 namespace HUBT_Social_API;
 
 public class Program
 {
     public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        // Gọi hàm cấu hình và đăng ký dịch vụ
-        Configures(builder);
-        Services(builder);
-
-        var app = builder.Build();
-
-        // Cấu hình HTTP request pipeline
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
-        app.UseLocalization();
-        app.UseHttpsRedirection();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        // Định tuyến các controller và SignalR Hub
-        app.MapControllers();
-        app.MapHub<ChatHub>("/chathub");
-
-        app.Run();
-    }
-    private static void Configures(WebApplicationBuilder builder)
     {
         // Cấu hình Swagger
         builder.Services.AddAuthorization();
@@ -62,5 +36,31 @@ public class Program
         builder.Services.AddControllers();
     }
 
-    
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        // Gọi hàm cấu hình và đăng ký dịch vụ
+        Configures(builder);
+        Services(builder);
+
+        var app = builder.Build();
+
+        // Cấu hình HTTP request pipeline
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseLocalization();
+        app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        // Định tuyến các controller và SignalR Hub
+        app.MapControllers();
+        app.MapHub<ChatHub>("/chathub");
+
+        app.Run();
+    }
 }

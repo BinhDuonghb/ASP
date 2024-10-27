@@ -1,8 +1,6 @@
+namespace HUBT_Social_API.Features.Chat.Services.IChatServices;
 
-namespace HUBTSOCIAL.Src.Features.Chat.Services.IChatServices
+public interface IImageService
 {
-    public interface IImageService
-    {
-        Task<bool> UploadImageAsync(string userId, string chatRoomId, byte[] imageData);
-    }
+    Task<bool> UploadImageAsync(string userId, string chatRoomId, byte[] imageData);
 }
