@@ -10,6 +10,6 @@ public interface IAuthService
     Task<(IdentityResult, AUser)> RegisterAsync(RegisterRequest model);
     Task<(SignInResult, AUser?)> LoginAsync(ILoginRequest model);
 
-    Task<AUser> VerifyCodeAsync(VLpostcodeRequest request);
+    Task<AUser> VerifyCodeAsync(ValidatePostcodeRequest request);
     Task<bool> ChangeLanguage(ChangeLanguageRequest changeLanguageRequest);
 }

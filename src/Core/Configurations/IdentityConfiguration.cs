@@ -14,7 +14,7 @@ public static class IdentityConfiguration
             MongoDbSettings = new MongoDbSettings
             {
                 ConnectionString = configuration.GetSection("ConnectionStrings:AuthService").Get<string>(),
-                DatabaseName = "HUBTSocialAuth"
+                DatabaseName = "HUBT_Management"
             },
             IdentityOptionsAction = option =>
             {

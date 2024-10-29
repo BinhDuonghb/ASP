@@ -55,7 +55,7 @@ public class AccountController : ControllerBase
             await _emailService.SendEmailAsync(new EmailRequest
                 { Code = code.Code, Subject = "Validate Email Code", ToEmail = request.Email });
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(
                 500,
@@ -79,7 +79,7 @@ public class AccountController : ControllerBase
 
     // Đăng nhập và gửi mã OTP qua email
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync(ILoginRequest model)
+    public async Task<IActionResult> LoginAsync(LoginByStudentCodeRequest model)
     {
         var (result, user) = await _authService.LoginAsync(model);
 
@@ -92,7 +92,7 @@ public class AccountController : ControllerBase
                 await _emailService.SendEmailAsync(new EmailRequest
                     { Code = code.Code, Subject = "Validate Email Code", ToEmail = user.Email });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(
                     500,
@@ -148,7 +148,7 @@ public class AccountController : ControllerBase
 
     // Xác thực mã OTP và tạo token nếu thành công
     [HttpPost("confirm-code")]
-    public async Task<IActionResult> ConfirmCode([FromBody] VLpostcodeRequest request)
+    public async Task<IActionResult> ConfirmCode([FromBody] ValidatePostcodeRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(

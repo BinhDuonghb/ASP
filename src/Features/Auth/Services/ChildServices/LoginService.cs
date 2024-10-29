@@ -20,7 +20,8 @@ public class LoginService : ILoginService
     public async Task<(SignInResult, AUser?)> LoginAsync(ILoginRequest model)
     {
         var user = await FindUserByIdentifierAsync(model);
-        if (user == null) return (new SignInResult(), null);
+        if (user == null)
+            return (SignInResult.Failed, null);
 
         var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
         return result.Succeeded

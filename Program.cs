@@ -6,7 +6,7 @@ namespace HUBT_Social_API;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static void Configures(WebApplicationBuilder builder)
     {
         // Cấu hình Swagger
         builder.Services.AddAuthorization();

@@ -8,5 +8,5 @@ public interface IEmailService
 {
     Task SendEmailAsync(EmailRequest emailRequest);
     Task<Postcode> CreatePostcode(string reciver);
-    Task<AUser> ValidatePostcode(VLpostcodeRequest postcode);
+    Task<AUser> ValidatePostcode(ValidatePostcodeRequest postcode);
 }

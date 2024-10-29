@@ -39,7 +39,7 @@ public class AuthService : IAuthService
     }
 
 
-    public async Task<AUser> VerifyCodeAsync(VLpostcodeRequest request)
+    public async Task<AUser> VerifyCodeAsync(ValidatePostcodeRequest request)
     {
         return await _emailService.ValidatePostcode(request);
     }

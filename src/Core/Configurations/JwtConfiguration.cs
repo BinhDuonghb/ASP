@@ -1,6 +1,7 @@
 using System.Text;
 using HUBT_Social_API.Core.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HUBT_Social_API.Core.Configurations;
@@ -19,7 +20,6 @@ public static class JwtConfiguration
             })
             .AddJwtBearer(options =>
             {
-#pragma warning disable CS8602
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -30,8 +30,8 @@ public static class JwtConfiguration
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                 };
-#pragma warning restore CS8602
-            });
+            })
+            .AddCookie(IdentityConstants.ApplicationScheme); 
 
         return services;
     }

@@ -1,7 +1,7 @@
 ﻿namespace HUBT_Social_API.Features.Auth.Dtos.Request;
 
-public class VLpostcodeRequest
+public class ValidatePostcodeRequest
 {
     public string Postcode { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 }

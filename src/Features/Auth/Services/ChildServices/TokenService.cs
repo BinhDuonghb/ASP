@@ -43,62 +43,15 @@ public class TokenService : ITokenService
         claims.AddRange(roleClaims);
 
         // Tạo JWT token
-        var token = GenerateAccessToken(claims);
+        string token = GenerateAccessToken(claims);
+        string refreshToken = GenerateRefreshToken(claims);
 
         // Xử lý Refresh Token: Cập nhật hoặc tạo mới
-        await HandleRefreshTokenAsync(user, token);
+        await HandleRefreshTokenAsync(user, token, refreshToken);
 
         return token;
     }
 
-
-    public async Task<TokenResponse> RefreshToken(RefreshTokenRequest request)
-    {
-        var refreshToken =
-            await _refreshToken.Find(item => item.RefreshTo == request.RefreshToken).FirstOrDefaultAsync();
-        if (refreshToken != null)
-        {
-            var principal = ValidateToken(refreshToken.AccessToken);
-
-            if (!principal.Success)
-                return new TokenResponse
-                {
-                    Success = false,
-                    Message = principal.Message
-                };
-
-            var userId = principal.ClaimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return new TokenResponse
-                {
-                    Success = false,
-                    Message = "Can't not found userId in jwt"
-                };
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return new TokenResponse
-                {
-                    Success = false,
-                    Message = $"Can't find the user with Id of {userId}"
-                };
-            var _exsitdata = await _refreshToken.Find(t => t.UserId == userId && t.RefreshTo == request.RefreshToken)
-                .FirstOrDefaultAsync();
-            if (_exsitdata != null)
-            {
-                var finalToken = GenerateAccessToken(await _userManager.GetClaimsAsync(user));
-                return new TokenResponse
-                {
-                    Token = finalToken,
-                    Refresh = await ReGenerateToken(user),
-                    Success = true
-                };
-            }
-
-            return new TokenResponse { Success = false, Message = "Can't find the owner of this token" };
-        }
-
-        return new TokenResponse { Success = false, Message = "Refresh Token Not Found" };
-    }
 
     public async Task<UserResponse> GetCurrentUser(string accessToken)
     {
@@ -153,40 +106,20 @@ public class TokenService : ITokenService
         }
     }
 
-    private async Task<string> ReGenerateToken(AUser user)
-    {
-        var refreshtoken = GenerateRefreshToken(await _userManager.GetClaimsAsync(user));
-        var existion = _refreshToken.Find(t => t.UserId == user.Id.ToString()).FirstOrDefaultAsync();
-        if (existion != null)
-        {
-            var update = Builders<RefreshToken>.Update.Set(t => t.RefreshTo, refreshtoken);
-            await _refreshToken.UpdateOneAsync(t => t.UserId == user.Id.ToString(), update);
-        }
-        else
-        {
-            await _refreshToken.InsertOneAsync(new RefreshToken
-            {
-                UserId = user.Id.ToString(),
-                AccessToken = GenerateAccessToken(await _userManager.GetClaimsAsync(user)),
-                RefreshTo = refreshtoken
-            });
-        }
 
-        return refreshtoken;
-    }
 
-    private async Task HandleRefreshTokenAsync(AUser user, string accessToken)
+    private async Task HandleRefreshTokenAsync(AUser user, string accessToken,string refreshToken)
     {
         var existingRefreshToken = await _refreshToken.Find(t => t.UserId == user.Id.ToString()).FirstOrDefaultAsync();
 
         if (existingRefreshToken == null)
         {
             await _refreshToken.InsertOneAsync(new RefreshToken
-                { AccessToken = accessToken, UserId = user.Id.ToString() });
+                { AccessToken = accessToken, RefreshTo= refreshToken, UserId = user.Id.ToString() });
         }
         else
         {
-            var update = Builders<RefreshToken>.Update.Set(t => t.AccessToken, accessToken);
+            var update = Builders<RefreshToken>.Update.Set(t => t.AccessToken, accessToken).Set(t => t.RefreshTo,refreshToken);
             await _refreshToken.UpdateOneAsync(t => t.UserId == existingRefreshToken.UserId, update);
         }
 

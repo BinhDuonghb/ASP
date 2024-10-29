@@ -68,11 +68,11 @@ public class EmailService : IEmailService
         return postcode;
     }
 
-    public async Task<AUser?> ValidatePostcode(VLpostcodeRequest postcode)
+    public async Task<AUser?> ValidatePostcode(ValidatePostcodeRequest postcode)
     {
-        var user = await _userManager.FindByNameAsync(postcode.UserName);
+        var user = await _userManager.FindByEmailAsync(postcode.Email);
         if (user == null) return null;
-        var userPostcode = await _postcode.Find(ps => ps.Code == postcode.Postcode && ps.Email == postcode.UserName)
+        var userPostcode = await _postcode.Find(ps => ps.Code == postcode.Postcode && ps.Email == postcode.Email)
             .FirstOrDefaultAsync();
         if (userPostcode == null) return null;
         return user;
